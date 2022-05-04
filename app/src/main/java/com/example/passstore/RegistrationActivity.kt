@@ -18,12 +18,14 @@ class RegistrationActivity : AppCompatActivity() {
     private lateinit var userInfoList: ArrayList<Users>
     private var emailList = arrayListOf<String>()
     private var usernameList = arrayListOf<String>()
-    private var DB : DBHelper1 = DBHelper1(this)
+    private lateinit var DB: DBHelper1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegistrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        DB = DBHelper1(this)
 
         update()
 
@@ -32,7 +34,7 @@ class RegistrationActivity : AppCompatActivity() {
 
             if(RegistrationUtil.validatePassword(passwordRegister, confirmPassword) && RegistrationUtil.validateEmail(
                     emailRegister, emailList) && RegistrationUtil.validateName(nameUser) && RegistrationUtil.validateUsername(
-                    usernameRegister, usernameList) && writeJSONtoFile(usernameRegister, passwordRegister)){
+                    usernameRegister, usernameList) && saveToDatabase(usernameRegister, passwordRegister)){
                 binding.textRegisterIncorrectCondition.text = ""
                 Toast.makeText(this, "Successfully Created", Toast.LENGTH_SHORT).show()
                 Thread.sleep(1000)
@@ -42,7 +44,7 @@ class RegistrationActivity : AppCompatActivity() {
                 if(!RegistrationUtil.validateName(nameUser)){
                     binding.textRegisterIncorrectCondition.text = "Name is not filled in"
                 }
-                else if(!RegistrationUtil.validateUsername(usernameRegister, usernameList)){
+                else if(!DB.checkusername(usernameRegister)){
                     binding.textRegisterIncorrectCondition.text = "Username does not match condition or already used"
                 }
                 else if(!RegistrationUtil.validateEmail(emailRegister, emailList)){
@@ -64,7 +66,7 @@ class RegistrationActivity : AppCompatActivity() {
         confirmPassword = binding.passwordRegisterConfirmPassword.text.toString()
     }
 
-    private fun writeJSONtoFile(username : String, password : String) : Boolean{
+    private fun saveToDatabase(username : String, password : String) : Boolean{
         var checkInsertData = DB.insertData(username, password)
         return checkInsertData
     }

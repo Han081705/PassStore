@@ -11,28 +11,45 @@ import com.example.passstore.databinding.ActivityLoginBinding
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityLoginBinding
-    private var DB : DBHelper1 = DBHelper1(this)
+    private lateinit var DB: DBHelper1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.buttonLoginLogin.setOnClickListener{
-            var res : Cursor = DB.getData()
-//            if(res.getString(0).equals(binding.plaintextLoginUsername.text)) {
-//                val intent1 = Intent(this, MainActivity::class.java)
-//                startActivity(intent1)
-//            }else{
-//                Toast.makeText(this, "Information is Incorrect", Toast.LENGTH_SHORT).show()
-//            }
-            Log.d("TAG", "onCreate: ${res.getString(0)}")
+        var username = binding.plaintextLoginUsername.text.toString()
+        var password = binding.passwordLoginPassword.text.toString()
+        var btnlogin = binding.buttonLoginLogin
+        DB = DBHelper1(this)
 
+        btnlogin.setOnClickListener{
+            Log.d("TAG", "onCreate: ${username}, ${password}")
+            Log.d("TAG", "onCreate: ${DB.checkusernamepassword(username, password)}")
+            update()
+            if (username == "" || password == "")
+            {
+                Toast.makeText(this@LoginActivity, "Please enter all the fields", Toast.LENGTH_SHORT).show()
+            }
+            else {
+                val checkuserpass = DB.checkusernamepassword(username, password)
+                if (checkuserpass) {
+                    Toast.makeText(this@LoginActivity, "Sign in successfull", Toast.LENGTH_SHORT)
+                        .show()
+                    val intent1 = Intent(this, MainActivity::class.java)
+                    startActivity(intent1)
+                }
+            }
         }
 
         binding.buttonLoginRegister.setOnClickListener {
             registerActivity()
         }
+    }
+
+    private fun update(){
+        var username = binding.plaintextLoginUsername.text.toString()
+        var password = binding.passwordLoginPassword.text.toString()
     }
 
     private fun registerActivity() {

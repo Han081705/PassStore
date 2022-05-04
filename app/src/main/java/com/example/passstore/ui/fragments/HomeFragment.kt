@@ -1,4 +1,4 @@
-package com.example.passstore.ui.home
+package com.example.passstore.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,14 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import com.example.passstore.R
+import com.example.passstore.App
+import com.example.passstore.HomeAdapter
 import com.example.passstore.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
     
     private var _binding: FragmentHomeBinding? = null
+    lateinit var adapter: HomeAdapter
+    lateinit var convertList: List<App>
 
     // This property is only valid between onCreateView and
     // onDestroyView.

@@ -8,5 +8,10 @@
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/menu_home" />
+
+        <item
+            android:id="@+id/nav_favorite"
+            android:icon="@drawable/ic_baseline_star_24"
+            android:title="Favorite" />
     </group>
 </menu>
