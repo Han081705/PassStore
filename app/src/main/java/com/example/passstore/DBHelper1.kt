@@ -2,6 +2,7 @@ package com.example.passstore
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
@@ -38,6 +39,12 @@ class DBHelper1(context: Context?) :
             arrayOf(username, password)
         )
         return cursor.count > 0
+    }
+
+    fun getData(): Cursor {
+        val MyDB = this.writableDatabase
+        val cursor = MyDB.rawQuery("Select * from users", null)
+        return cursor
     }
 
     companion object {

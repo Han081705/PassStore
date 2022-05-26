@@ -1,15 +1,20 @@
 package com.example.passstore
 
 import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.passstore.ui.fragments.HomeFragment
+import com.squareup.picasso.Picasso
 
 class HomeAdapter (var dataSet: List<App>) :
+
     RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
 
     /**
@@ -22,45 +27,35 @@ class HomeAdapter (var dataSet: List<App>) :
         val layout : ConstraintLayout
 
         init {
-            // putting onclicklistener in here is too complicated so well put it somewhere else
             icon = view.findViewById(R.id.imageView_appItem_icon)
             name = view.findViewById(R.id.textView_appItem_name)
             layout = view.findViewById(R.id.layout_appItem)
         }
     }
 
-    // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-        // Create a new view, which defines the UI of the list item
         val view = LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.item_app, viewGroup, false)
 
         return ViewHolder(view)
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-
-        // Get element from your dataset at this position and replace the
-        // contents of the view with that element
         val app = dataSet[position]
-        viewHolder.icon
+        Picasso.get().load(app.icon).into(viewHolder.icon)
         viewHolder.name.text = app.name
         viewHolder.layout.setOnClickListener {
-            // Toast.makeText(it.context, "Hi, you clicked on ${hero.name}", Toast.LENGTH_SHORT).show()
-            // get the context from something in the viewholder
-            val context = viewHolder.layout.context
-            // make the intent with context we got
-            val heroDetailIntent = Intent(context, AppDetailsActivity::class.java).apply {
-                // pass the whole hero object into the intent because it is parclable
-                putExtra(AppDetailsActivity.EXTRA_APP, app)
-            }
-            //context.startActivity(heroDetailIntent)
-            context.startActivity(heroDetailIntent)
+            val bundle = Bundle()
+            //TODO: find out how to make the navigation work i think you need to get the binding from homefragment in here
+            bundle.putParcelable(HomeFragment.BUNDLE_DETAIL_FRAGMENT, app)
+            viewHolder.itemView.findNavController().navigate(R.id.action_nav_home_to_nav_details, bundle)
+//            val context = viewHolder.layout.context
+//            val appDetailIntent = Intent(context, AppDetailsActivity::class.java).apply {
+//                putExtra(AppDetailsActivity.EXTRA_APP, app)
+//            }
+//            context.startActivity(appDetailIntent)
         }
     }
-
-    // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = dataSet.size
 
 }
